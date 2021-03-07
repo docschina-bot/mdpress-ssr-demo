@@ -1,0 +1,33 @@
+{
+  "name": "mdpress-ssr-demo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "mdpress dev src --temp .temp",
+    "dev:debug": "node --inspect-brk ./node_modules/.bin/mdpress dev src --temp .temp",
+    "dev:ssr": "DEV_SSR=true node ./node_modules/.bin/mdpress dev src --temp .temp",
+    "build": "mdpress build src --temp .temp --dest dist",
+    "build:debug": "node --inspect-brk ./node_modules/.bin/mdpress build src --temp .temp",
+    "lint": "eslint --fix --ext .js src/.mdpress",
+    "serve": "mdpress serve src --dest dist -p 80",
+    "serve:build": "mdpress serve src --dest dist -p 80 -b"
+  },
+  "dependencies": {
+    "@cloudbase/node-sdk": "^2.1.1",
+    "@mdpress/plugin-back-to-top": "^1.0.0-rc.7",
+    "@mdpress/plugin-tencent-cloud-cms": "^1.0.0-rc.15.7",
+    "docsearch.js": "^2.6.3",
+    "express-http-proxy": "^1.6.2",
+    "mdpress": "^1.0.0-rc.15",
+    "mdpress-plugin-serve": "^1.0.0-rc.7",
+    "nodemon": "^2.0.6"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.0.1",
+    "eslint": "^6.8.0",
+    "eslint-plugin-react": "^7.19.0",
+    "webpack-bundle-analyzer": "^4.3.0",
+    "webpack-hot-middleware": "^2.25.0",
+    "@cloudbase/node-sdk": "^2.4.0"
+  }
+}
