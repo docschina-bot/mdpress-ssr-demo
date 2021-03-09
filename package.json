@@ -9,7 +9,7 @@
     "build": "mdpress build src --temp .temp --dest dist",
     "build:debug": "node --inspect-brk ./node_modules/.bin/mdpress build src --temp .temp",
     "lint": "eslint --fix --ext .js src/.mdpress",
-    "serve": "mdpress serve src --dest dist -p 8080",
+    "serve": "mdpress serve src --dest dist -p 8080 --host 0.0.0.0",
     "serve:build": "mdpress serve src --dest dist -p 8080 -b"
   },
   "dependencies": {
