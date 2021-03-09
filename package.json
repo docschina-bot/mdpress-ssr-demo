@@ -9,8 +9,8 @@
     "build": "mdpress build src --temp .temp --dest dist",
     "build:debug": "node --inspect-brk ./node_modules/.bin/mdpress build src --temp .temp",
     "lint": "eslint --fix --ext .js src/.mdpress",
-    "serve": "mdpress serve src --dest dist -p 80",
-    "serve:build": "mdpress serve src --dest dist -p 80 -b"
+    "serve": "mdpress serve src --dest dist -p 8080",
+    "serve:build": "mdpress serve src --dest dist -p 8080 -b"
   },
   "dependencies": {
     "@cloudbase/node-sdk": "^2.1.1",
