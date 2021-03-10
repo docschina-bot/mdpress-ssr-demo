@@ -46,7 +46,7 @@ module.exports = {
             app.use(require("webpack-hot-middleware")(ssrCompiler));
 
 
-            proxyDocsPage(app,process.env.BFF_PORT)
+            proxyDocsPage(app,process.env.BFF_PORT,context.docsPath)
         }
     }
 };

@@ -2,10 +2,10 @@ const proxy = require("express-http-proxy");
 
 const proxyReqPathResolver = (req) => req.originalUrl;
 
-const proxyDocsPage = (app,port) => {
+const proxyDocsPage = (app,port,docsPath) => {
     app.use(
-        "/docs/*",
-        proxy(`localhost:${port}/docs`, {
+        docsPath,
+        proxy(`localhost:${port}${docsPath.replace(/\/\*$/,'')}`, {
             proxyReqPathResolver
         })
     );

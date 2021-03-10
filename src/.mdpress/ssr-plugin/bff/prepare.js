@@ -18,62 +18,68 @@ async function prepare(app) {
     }
 
     if ("development" !== process.env.NODE_ENV || DEVSSR) {
-        // Info: 请求 /docs 的时候返回 ssr 渲染的内容
-        // Todo: 考虑 context.base
-        app.get("/docs/*", async (req, res) => {
-            let serverBundle = DEVSSR
-                ? await requestPromise(
-                    `http://127.0.0.1:${process.env.port}/manifest/server.json`
-                )
-                : require(path.resolve(context.outDir, "manifest/server.json"));
-            let clientManifest = DEVSSR
-                ? await requestPromise(
-                    `http://127.0.0.1:${process.env.port}/manifest/client.json`
-                )
-                : require(path.resolve(context.outDir, "manifest/client.json"));
+        // Info: 请求 docsPath 的时候返回 ssr 渲染的内容
 
-            // Info: js 脚本加载两次，react-dom 的 render 执行两次，导致钩子失效
-            let template = await fs.readFileSync(context.ssrTemplate, "utf-8");
-            template = template.replace('{{{ renderScripts() }}}','');
+        app.get(context.docsPath, async (req, res) => {
 
-            const renderer = createBundleRenderer(serverBundle, {
-                clientManifest,
-                runInNewContext: false,
-                inject: true,
-                shouldPrefetch: context.siteConfig.shouldPrefetch || (() => true),
-                template,
-                contentPlaceholder: "<div id='root'></div>"
-            });
-
-            // 应该用 match
-            const param = path.basename(req.path);
-            const doc = await getData(param);
-
-            const ssrContext = {
-                url: req.path,
-                userHeadTags: [],
-                title: "MdPress",
-                lang: "en",
-                description: "",
-                pageMeta: "",
-                version: "1.0.0",
-                doc: doc[0],
-                state: JSON.stringify({
-                    doc: doc[0],
-                    param
-                })
-            };
-
-            let html;
             try {
-                html = await renderer.renderToString(ssrContext);
-                res.set("Content-Type", "text/html");
+                let serverBundle = DEVSSR
+                    ? await requestPromise(
+                        `http://127.0.0.1:${process.env.port}${context.base}manifest/server.json`
+                    )
+                    : require(path.resolve(context.outDir, "manifest/server.json"));
+                let clientManifest = DEVSSR
+                    ? await requestPromise(
+                        `http://127.0.0.1:${process.env.port}/manifest/client.json`
+                    )
+                    : require(path.resolve(context.outDir, "manifest/client.json"));
+
+                // Info: js 脚本加载两次，react-dom 的 render 执行两次，导致钩子失效
+                let template = await fs.readFileSync(context.ssrTemplate, "utf-8");
+                template = template.replace('{{{ renderScripts() }}}','');
+
+                const renderer = createBundleRenderer(serverBundle, {
+                    clientManifest,
+                    runInNewContext: false,
+                    inject: true,
+                    shouldPrefetch: context.siteConfig.shouldPrefetch || (() => true),
+                    template,
+                    contentPlaceholder: "<div id='root'></div>"
+                });
+
+                // 应该用 match
+                const param = path.basename(req.path);
+                const doc = await getData(param);
+
+                const ssrContext = {
+                    url: req.path,
+                    userHeadTags: [],
+                    title: "MdPress",
+                    lang: "en",
+                    description: "",
+                    pageMeta: "",
+                    version: "1.0.0",
+                    doc: doc[0],
+                    state: JSON.stringify({
+                        doc: doc[0],
+                        param
+                    })
+                };
+
+                let html;
+                try {
+                    html = await renderer.renderToString(ssrContext);
+                    res.set("Content-Type", "text/html");
+                } catch (e) {
+                    console.error(e);
+                    res.redirect(context.base);
+                }
+
+                res.send(html);
             } catch (e) {
-                console.error(e);
-                res.redirect(context.base);
+                res.status(500).send('server error!')
             }
 
-            res.send(html);
         });
     }
 }

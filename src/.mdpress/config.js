@@ -2,6 +2,7 @@ const { optimizeServerConfig } = require("./ssr-plugin/webpack/util");
 const handleDevSSR = require("./ssr-plugin/webpack/devSSR");
 
 module.exports = () => ({
+  // base:'/',
   extraWatchFiles: [
     require.resolve('@mdpress/plugin-tencent-cloud-cms')
   ],

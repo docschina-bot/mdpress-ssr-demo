@@ -2,13 +2,17 @@ const configs = require('./config');
 
 const SSRServePlugin = (options, context) => {
     const bffPort = (options.port || context.siteConfig.port || 3000) + 1;
+    const docsPath = (!context.base || context.base === '/') ? '/docs/*' : context.base + 'docs/*';
+    context.docsPath = docsPath;
+
     Object.assign(process.env,{
         BFF_PORT: bffPort,
         Context: JSON.stringify({
-            base: context.base,
+            base: context.base || '/',
             siteConfig: context.siteConfig,
             outDir: context.outDir,
-            ssrTemplate: context.ssrTemplate
+            ssrTemplate: context.ssrTemplate,
+            docsPath
         }),
         TENCENT_CLOUD_ENV: options.tencentCloudEnv,
         CMS_DOCUMENT: options.tencentCloudModel

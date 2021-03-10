@@ -8,7 +8,7 @@ function requestPromise(url, parse = true) {
             try {
                 resolve(parse ? JSON.parse(body) : body);
             } catch (e) {
-                console.log(e);
+                console.error(e);
                 reject(e);
             }
         });
