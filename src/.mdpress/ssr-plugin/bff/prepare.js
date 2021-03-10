@@ -19,18 +19,18 @@ async function prepare(app) {
 
     if ("development" !== process.env.NODE_ENV || DEVSSR) {
         // Info: 请求 docsPath 的时候返回 ssr 渲染的内容
-
         app.get(context.docsPath, async (req, res) => {
 
             try {
                 let serverBundle = DEVSSR
                     ? await requestPromise(
-                        `http://127.0.0.1:${process.env.port}${context.base}manifest/server.json`
+                        `http://127.0.0.1:${process.env.port}/manifest/server.json`
                     )
                     : require(path.resolve(context.outDir, "manifest/server.json"));
+
                 let clientManifest = DEVSSR
                     ? await requestPromise(
-                        `http://127.0.0.1:${process.env.port}/manifest/client.json`
+                        `http://127.0.0.1:${process.env.port}${context.base}manifest/client.json`
                     )
                     : require(path.resolve(context.outDir, "manifest/client.json"));
 
@@ -52,7 +52,7 @@ async function prepare(app) {
                 const doc = await getData(param);
 
                 const ssrContext = {
-                    url: req.path,
+                    url: context.base ? req.path.replace(context.base,'/'): req.path,
                     userHeadTags: [],
                     title: "MdPress",
                     lang: "en",
